@@ -1,0 +1,5 @@
+orders: [0] # , [1,0,0], [0,1,0], [1,1,0], [1,0,1], [1,1,1]
+past_days: 2
+which_ps: "t+s" # 
+interaction: 2
+difference: True
