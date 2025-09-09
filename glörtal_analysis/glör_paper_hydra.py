@@ -187,7 +187,6 @@ def find_aic_model(target, in_situ, orders, cols, past_days, interaction,differe
 
 # Forecasting the left out year for now. (Other option can be added in the future.)
 
-
 def load_raw(which_ps):
     a = pd.read_excel(
         "new_data/alleStauanlagen_temperatur_mitGloerEnnepe.xlsx", header=1
