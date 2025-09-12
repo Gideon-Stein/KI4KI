@@ -44,7 +44,7 @@ This codebase supports the following research publications:
 
 ### Prerequisites
 
-- Python 3.10 or higher
+- Tested with Python 3.13
 - Conda package manager
 - Access to proprietary data sources (see [Data Requirements](#data-requirements))
 
@@ -53,7 +53,7 @@ This codebase supports the following research publications:
 1. Clone the repository:
 ```bash
 git clone https://github.com/Gideon-Stein/KI4KI.git
-cd KI4KI/full_baseline
+cd KI4KI
 ```
 
 2. Create and activate the conda environment:
@@ -62,11 +62,6 @@ conda env create -f environment.yml
 conda activate dam_test
 ```
 
-3. For the exploration tools, install additional requirements:
-```bash
-cd ../explore
-pip install -r requirements.txt
-```
 
 ### Data Requirements
 
