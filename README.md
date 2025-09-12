@@ -5,7 +5,7 @@
 
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 
-This repository contains research contributions and tools for forecasting dam deformations based on environmental drivers using PSI (Persistent Scatterer Interferometry) and pendulum swing time-series data. The project implements advanced time-series modeling techniques including ARIMAX (AutoRegressive Integrated Moving Average with eXogenous variables) for infrastructure monitoring and climate-resilient forecasting.
+This repository contains research contributions and tools for forecasting dam deformations based on environmental drivers using PSI (Persistent Scatterer Interferometry) and pendulum swing time-series data.
 
 ## Table of Contents
 
@@ -22,7 +22,7 @@ This repository contains research contributions and tools for forecasting dam de
 
 ## Background
 
-The KI4KI project focuses on developing artificial intelligence solutions for climate-resilient infrastructure monitoring, specifically targeting dam deformation prediction. Using satellite-based Persistent Scatterer Interferometry (PSI) data combined with environmental variables, this system provides early warning capabilities for infrastructure management.
+The KI4KI project focuses on developing artificial intelligence solutions for climate-resilient infrastructure monitoring, specifically targeting dam deformation prediction. Using satellite-based Persistent Scatterer Interferometry (PSI) data combined with environmental variables, this repository provides tools for a potential future early warning system for infrastructure management.
 
 ### Key Features
 
