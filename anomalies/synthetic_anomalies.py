@@ -2,20 +2,14 @@
 import numpy as np
 import scipy.optimize
 import scipy
-import pathlib
 import pandas as pd
-from os import listdir
 import numpy as np
 import copy
-from pathlib import Path
-import pickle
 from sklearn.linear_model import LinearRegression
-
-global data_source_path
-data_source_path = pathlib.Path() / "/home/datasets4/stein/dam/"
 from functools import reduce
-
 import statsmodels.api as sm
+from scipy.stats import ranksums
+import matplotlib.pyplot as plt
 
 
 def select_daily_exog(
@@ -277,3 +271,160 @@ def reverse_event(
                 replace = np.flip(df[x][increase_start_index: increase_start_index+length].values)
                 out.append(replace)
         return out
+
+
+
+def model(
+    train,
+    test,
+    exogs,
+    ax,
+    past_days=0,
+    autoregressive=0,
+    cols=["W"],
+    plot_bases=True,
+    naming="Bad model",
+    text_pos=0.8,
+    color = "orange"
+):
+    targetT, temporaryT = linear_pipeline(
+        train,
+        exogs,
+        cols=cols,
+        past_days=past_days,
+        autoregressive=autoregressive,
+        return_temporary=True,
+    )
+    m, min_max = linear_pipeline(
+        train,
+        exogs,
+        cols=cols,
+        past_days=past_days,
+        autoregressive=autoregressive,
+        return_temporary=False,
+    )
+    target, temporary = linear_pipeline(
+        test,
+        exogs,
+        cols=cols,
+        past_days=past_days,
+        autoregressive=autoregressive,
+        return_temporary=True,
+        min_max=min_max,
+    )
+    pred = m.predict(temporary)
+    predT = m.predict(temporaryT)
+    if plot_bases:
+        ax[2].hlines(0.05, 0, 50, color="red", linestyle="--", label="p=0.05 threshold")
+
+        targetT.reset_index().plot.scatter(
+            x="date", y=targetT.columns[0], ax=ax[0], label="Train", color="violet"
+        )
+        target[:40].reset_index().plot.scatter(
+            x="date",
+            y=target.columns[0],
+            ax=ax[0],
+            label="Normal Test",
+            color="blue",
+        )
+
+        target[40:].reset_index().plot.scatter(
+            x="date",
+            y=target.columns[0],
+            ax=ax[0],
+            label="Anomalous Test",
+            color="red",
+        )
+
+    pred.plot(ax=ax[0], color=color, linewidth=2)
+    predT.plot(ax=ax[0], color=color, linewidth=2)
+
+    train_resids = (predT - targetT.values[:, 0]).abs()
+    test_resids = (pred - target.values[:, 0]).abs()
+
+    ax[1].hist(test_resids[:40], label=naming, alpha=0.5, bins=10, color=color)
+
+    # Plot train and test residuals as text
+    ax[0].text(
+        -1.5,
+        text_pos,
+        naming
+        + f"\nTrain MAE: {train_resids.mean():.3f}\nTest MAE: {test_resids[:40].mean():.3f}",
+        transform=ax[1].transAxes,
+        fontsize=12,
+        verticalalignment="top",
+        bbox=dict(boxstyle="round", fc="w", ec="0.5", alpha=0.8),
+    )
+    stack = []
+    stack2 = []
+    for x in range(50):
+        # shuffle test
+        p_value = ranksums(
+            test_resids[:40].dropna(), test_resids.dropna()[40 + x : 40 + x + 50]
+        ).pvalue
+        stack.append(p_value)
+        # TODO Other tests might be worth exploring here. Make this an option this strategy will be explored further.
+        # bins = np.histogram_bin_edges(
+        #     np.concatenate(
+        #         [test_resids[:40].dropna(), test_resids.dropna()[40 + x : 40 + x + 50]]
+        #     ),
+        #     bins=10,
+        # )
+        # hist_p, _ = np.histogram(test_resids[:40].dropna(), bins=bins, density=True)
+        # hist_q, _ = np.histogram(
+        #     test_resids.dropna()[40 + x : 40 + x + 50], bins=bins, density=True
+        # )
+        # # Add a small value to avoid division by zero
+        # hist_p += 1e-10
+        # hist_q += 1e-10
+        # stack2.append(entropy(hist_p, hist_q))
+
+    #mean = test_resids[:40].mean()
+    #std = test_resids[:40].std()
+    #Z = (test_resids[40:] - mean) / std
+    # Z.abs().cumsum().plot(ax=ax[1,1], label=naming + "Accumulated Z-Score")
+
+    # Z.abs().plot(ax=ax[1,1], label=naming + "Accumulated Z-Score")
+    #print(stack2)
+    #ax[2].plot(stack2, label=naming, color=color)
+
+    ax[2].plot(stack, label=naming, color=color)
+    ax[2].set_title("Shuffle test p-values", fontsize=12)
+    ax[0].set_title("Residuals for non-anomalous test data")
+    ax[1].set_title("Distribution over absolute residuals \n during normal test window")
+
+
+
+
+def display_anomaly(test_case, data):
+    
+    train = test_case[:200]
+    test = test_case[200:]
+    fig, ax = plt.subplots(figsize=(6, 3))
+    data.rename(columns={"720593": "Train"}).interpolate()[:250].plot(ax=ax,linewidth=2, color="darkblue")
+    data.rename(columns={"720593": "Original TS"}).interpolate()[250:].plot(ax=ax,linewidth=2, color="darkblue", alpha=0.4)
+
+    test.rename(columns={"720593": "Anomalous TS"}).iloc[50:].plot(ax=ax, color="red", linewidth=2)
+    test.rename(columns={"720593": "Calibration interval"}).iloc[:50].plot(ax=ax, color="green", linewidth=2)
+
+    plt.title("Test Case: Lister, asc0, 720593")
+
+
+    plt.vlines(
+        x=train.index[-1],
+        ymin=test_case.min().values[0],
+        ymax=test_case.max().values[0],
+        color="red",
+        linestyle="--",
+        label="Train/Test Split",
+    )
+
+    plt.vlines(
+        x=test.index[50],
+        ymin=test_case.min().values[0],
+        ymax=test_case.max().values[0],
+        color="red",
+        linestyle="--",
+        label="Train/Test Split",
+    )
+    plt.show()

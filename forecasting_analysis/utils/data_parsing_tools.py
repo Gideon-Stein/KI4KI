@@ -6,8 +6,7 @@ import copy
 from pathlib import Path
 import pickle
 
-global data_source_path
-data_source_path = pathlib.Path() / "/home/datasets4/stein/dam/"
+
 
 
 def get_baseline_external(where, path):
@@ -34,8 +33,7 @@ def txt_to_pandas(path):
 def load_location(path, loc):
     # location put and load all 4 provided variations
     data = {}
-    asc = "Ascending_LineOfSight"
-    desc = "Descending_LineOfSight"
+    path = pathlib.Path() / path
     data["ew"] = txt_to_pandas(path / loc / (loc + "_EastWest.txt"))
     data["ver"] = txt_to_pandas(path / loc / (loc + "_Vertical.txt"))
 
@@ -55,7 +53,7 @@ def load_location(path, loc):
     return data
 
 
-def load_all_locations(path=data_source_path):
+def load_all_locations(path):
     # Load all PCI points from data
     locs = listdir(path)
     meta_complete = {}
@@ -76,7 +74,7 @@ def load_all_locations(path=data_source_path):
 def dl_RV(path):
     # Load and parse the original external variables
     data_stack = {}
-    dp = pathlib.Path() / path / "Daten" / "Ruhrverband" / "Daten"
+    dp = pathlib.Path() / path 
     files = pathlib.Path(dp).glob("**/*")
     files = [x for x in files if x.is_file()]
     for x in files:
@@ -131,7 +129,7 @@ def dl_RV(path):
 
 
 def get_lot(
-    p="/home/datasets4/stein/dam/Daten/Ruhrverband/Daten/Moehne/Moehne_Lotanlage.xlsx",
+    p="../raw_data/Ruhrverband/Daten/Moehne/Moehne_Lotanlage.xlsx",
 ):
     lot = pd.read_excel(p, engine="openpyxl")
     lot.columns = ["a", "b", "c", "d", "e", "f"]
@@ -149,7 +147,7 @@ def get_lot(
     return {"Moehne": {"lot": lot}}
 
 
-def load_all_external(locations, path=data_source_path):
+def load_all_external(locations, path):
     return {x: get_baseline_external(x, path) for x in locations}
 
 
@@ -210,12 +208,12 @@ def load_data_bases(cfg):
             data = pickle.load(open("../saves_and_results/cache_endog.p", "rb"))
             print("Load cached data")
         else:
-            data, meta = load_all_locations(path=data_source_path / "Datenpaket_BBD")
+            data, meta = load_all_locations(path=cfg.source_path + "/Datenpaket_BBD")
             pickle.dump(data, open("../saves_and_results/cache_endog.p", "wb"))
     if Path("../saves_and_results/cache_exogs.p").is_file():
         exogs = pickle.load(open("../saves_and_results/cache_exogs.p", "rb"))
         print("Load cached data")
     else:
-        exogs = load_all_external(cfg.all_locs)
+        exogs = load_all_external(locations=cfg.all_locs, path=cfg.source_path + "/Ruhrverband")
         pickle.dump(exogs, open("../saves_and_results/cache_exogs.p", "wb"))
     return data, exogs
