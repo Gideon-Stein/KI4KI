@@ -1,0 +1,20 @@
+defaults:
+  - search: 0_full_search.yaml
+
+model_type: "linear"
+loc: "Moehne"
+dir: "lot"
+forecast_path: "grid_results"
+save_path: "../save_and_results/forecasts/"
+criteria: "MSE"
+parallel: False   # Does Multiprocessing
+remove_W: False # Runs all specifications but completely removes W
+remove_T: False # Runs all specifications but completely removes T
+remove_everything: False # Used for baseline forecasts to only keep the actual 4 baseline models.
+
+
+source_path: "../raw_data/"
+cache_path: "../saves_and_results"
+all_locs: ["Moehne", "Fuerwigge", "Verse", "Lister", "Bigge", "Sorpe"]  # These are all available models
+all_dirs: ["asc0", "ew", "ver", "desc0", "asc1", "desc1"] # Directions (not all are available everywhere)
+all_model_types: ["linear", "sarimax", "forest", "ada"] # model types that are available
