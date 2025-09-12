@@ -5,7 +5,7 @@
 
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 
-This repository contains research contributions and tools for forecasting dam deformations based on environmental drivers using PSI (Persistent Scatterer Interferometry) and pendulum swing time-series data. The project implements advanced time-series modeling techniques including ARIMAX (AutoRegressive Integrated Moving Average with eXogenous variables) for infrastructure monitoring and climate-resilient forecasting.
+This repository contains research contributions and tools for forecasting dam deformations based on environmental drivers using PSI (Persistent Scatterer Interferometry) and pendulum swing time-series data.
 
 ## Table of Contents
 
@@ -22,7 +22,7 @@ This repository contains research contributions and tools for forecasting dam de
 
 ## Background
 
-The KI4KI project focuses on developing artificial intelligence solutions for climate-resilient infrastructure monitoring, specifically targeting dam deformation prediction. Using satellite-based Persistent Scatterer Interferometry (PSI) data combined with environmental variables, this system provides early warning capabilities for infrastructure management.
+The KI4KI project focuses on developing artificial intelligence solutions for climate-resilient infrastructure monitoring, specifically targeting dam deformation prediction. Using satellite-based Persistent Scatterer Interferometry (PSI) data combined with environmental variables, this repository provides tools for a potential future early warning system for infrastructure management.
 
 ### Key Features
 
@@ -44,7 +44,7 @@ This codebase supports the following research publications:
 
 ### Prerequisites
 
-- Python 3.10 or higher
+- Tested with Python 3.13
 - Conda package manager
 - Access to proprietary data sources (see [Data Requirements](#data-requirements))
 
@@ -53,7 +53,7 @@ This codebase supports the following research publications:
 1. Clone the repository:
 ```bash
 git clone https://github.com/Gideon-Stein/KI4KI.git
-cd KI4KI/full_baseline
+cd KI4KI
 ```
 
 2. Create and activate the conda environment:
@@ -62,11 +62,6 @@ conda env create -f environment.yml
 conda activate dam_test
 ```
 
-3. For the exploration tools, install additional requirements:
-```bash
-cd ../explore
-pip install -r requirements.txt
-```
 
 ### Data Requirements
 
