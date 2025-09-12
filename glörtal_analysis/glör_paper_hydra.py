@@ -1,19 +1,41 @@
-import pickle
+"""
+This script performs linear modeling and forecasting for ps time series data using in-situ measurements:
+A number of models that include and exclude various terms are optimized and the best scoring models are saved to the results folder.
+- Data loading and preprocessing from multiple Excel sources.
+- Construction of exogenous variables with lagged and interaction terms.
+- Linear regression modeling with autoregressive components.
+- Model selection based on mean absolute residuals.
+- Saving fitted models and intermediate results for further analysis.
+Key functions:
+- select_daily_exog: Constructs lagged exogenous variables for modeling.
+- prep_modeling_linear: Prepares the design matrix for linear regression, including autoregressive and trend terms.
+- linear_pipeline: Fits a linear regression model to the target variable using specified exogenous variables and options for interaction and differencing.
+- find_aic_model: Searches for the best model configuration based on residuals and retrains the optimal model.
+- load_raw: Loads and merges raw data from Excel files, interpolates missing values, and prepares in-situ and satellite datasets.
+- main: Orchestrates the modeling workflow using Hydra for configuration management, fits models for different periods, and saves results.
+Configuration:
+- Uses Hydra and OmegaConf for flexible experiment configuration via YAML files.
+Usage:
+- Run as a standalone script. Requires configuration YAML and appropriate data files in the specified directories.
+"""
 import warnings
 from datetime import datetime
 import pandas as pd
 import pickle
 from statsmodels.tools.sm_exceptions import ConvergenceWarning, ValueWarning
-
 import statsmodels.api as sm
 import os
 from functools import reduce
 import numpy as np
+import pickle
 import hydra
 from omegaconf import DictConfig
-
+import warnings
+warnings.filterwarnings('ignore')
 warnings.simplefilter("ignore", ValueWarning)
 warnings.simplefilter("ignore", ConvergenceWarning)
+
+
 
 
 def select_daily_exog(
@@ -109,6 +131,7 @@ def linear_pipeline(
             target.index,
             variable_name="T",
         ).set_index("date")
+
         W["W_0"] = W["W_1"] - W["W_0"]
         T["T_0"] = T["T_1"] - T["T_0"]
         W.columns = W.columns.str.replace("W_0", "W_diff")
@@ -122,9 +145,11 @@ def linear_pipeline(
     target = (target - target.min()) / (target.max() - target.min())
     exog.fillna(value=exog.mean(), inplace=True)
     temporary = prep_modeling_linear(target, exog, autoregressive=autoregressive)
-    if save_table:
-        temporary.to_csv("temporary" + save_table + ".csv")
-        target.to_csv("target" + save_table + ".csv")
+    if save_table: # TODO this overwrites previous tables, should be fixed if needed.
+        if not os.path.exists("data_saves/"):
+            os.makedirs("data_saves/")
+        temporary.to_csv("data_saves/temporary" + save_table + ".csv")
+        target.to_csv("data_saves/target" + save_table + ".csv")
     olsmod = sm.OLS(
         exog=temporary.fillna(method="backfill"),
         endog=target,
@@ -133,7 +158,7 @@ def linear_pipeline(
     return olsres
 
 
-def find_aic_model(target, in_situ, orders, cols, past_days, interaction,difference, naming=None):
+def find_aic_model(target, in_situ, orders, cols, past_days, interaction,difference=False, naming=None):
     full_stack = []
     for order in orders:
         stack = []
@@ -168,6 +193,8 @@ def find_aic_model(target, in_situ, orders, cols, past_days, interaction,differe
                 )
                 stack.append(m.resid.abs().mean())
             full_stack.append(stack)
+            
+    print("Number of models evaluated: ", len(np.array(full_stack).flatten()))
 
     best = np.where(np.array(full_stack) == np.array(full_stack).min())
     # retrain best
@@ -203,6 +230,7 @@ def load_raw(which_ps):
         raise ValueError("Unknown PS type. Use 'merge', 'tsx' or 'S1'.")
 
     b = b[["Datum/Uhrzeit", "Wasserstand (NHN) [m NHN]"]]
+    b["Datum/Uhrzeit"] = b["Datum/Uhrzeit"].dt.round("D")
     a = a[["Datum:", "Glör L2:"]]
     c = c[["date", "deform"]]
     a.columns = ["date", "T"]
@@ -229,6 +257,7 @@ def load_raw(which_ps):
 def main(cfg: DictConfig):
     print(cfg)
     start = datetime.now()
+    print("Starting at ", start)
     ps, in_situ = load_raw(which_ps=cfg.which_ps)
 
     # periods:
@@ -244,49 +273,61 @@ def main(cfg: DictConfig):
     if not os.path.exists("results/" + cfg.which_ps):
         os.makedirs("results/" + cfg.which_ps)
 
-    # m = find_aic_model(
-    #     drain, in_situ, cfg.orders, cols=["T"], past_days=cfg.past_days, interaction=-1, naming="drain"
-    # )
-    # pickle.dump(m, open("results/" + cfg.which_ps + "/drain.p", "wb"))
+    m = find_aic_model(
+        drain, in_situ, cfg.orders, cols=["T"], past_days=cfg.past_days, interaction=-1, naming="drain"
+    )
+    pickle.dump(m, open("results/" + cfg.which_ps + "/drain.p", "wb"))
+    print(np.abs(m.resid).mean())
 
-    # m = find_aic_model(
-    #     refill, in_situ, cfg.orders, cols=["T"], past_days=cfg.past_days, interaction=-1, naming="refill_T"
-    # )
-    # pickle.dump(m, open("results/" + cfg.which_ps + "/refill_T.p", "wb"))
-    # m = find_aic_model(
-    #     refill, in_situ, cfg.orders, cols=["W"], past_days=cfg.past_days, interaction=-1, naming="refill_W"
-    # )
-    # pickle.dump(m, open("results/" + cfg.which_ps + "/refill_W.p", "wb"))
 
-    # m = find_aic_model(
-    #     full, in_situ, cfg.orders, cols=["T"], past_days=cfg.past_days, interaction=-1, naming="full_T"
-    # )
-    # pickle.dump(m, open("results/" + cfg.which_ps + "/full_T.p", "wb"))
-    # m = find_aic_model(
-    #     full, in_situ, cfg.orders, cols=["W"], past_days=cfg.past_days, interaction=-1, naming="full_W"
-    # )
-    # pickle.dump(m, open("results/" + cfg.which_ps + "/full_W.p", "wb"))
+    m = find_aic_model(
+        refill, in_situ, cfg.orders, cols=["T"], past_days=cfg.past_days, interaction=-1, naming="refill_T"
+    )
+    pickle.dump(m, open("results/" + cfg.which_ps + "/refill_T.p", "wb"))
+    print(np.abs(m.resid).mean())
 
-    # m = find_aic_model(
-    #     refill,
-    #     in_situ,
-    #     cfg.orders,
-    #     cols=["T", "W"],
-    #     past_days=cfg.past_days,
-    #     interaction=-1,
-    #     naming="refill"
-    # )
-    # pickle.dump(m, open("results/" + cfg.which_ps + "/refill.p", "wb"))
-    # m = find_aic_model(
-    #     full,
-    #     in_situ,
-    #     cfg.orders,
-    #     cols=["T", "W"],
-    #     past_days=cfg.past_days,
-    #     interaction=-1,
-    #     naming="full"       
-    # )
-    # pickle.dump(m, open("results/" + cfg.which_ps + "/full.p", "wb"))
+    m = find_aic_model(
+        refill, in_situ, cfg.orders, cols=["W"], past_days=cfg.past_days, interaction=-1, naming="refill_W"
+    )
+    pickle.dump(m, open("results/" + cfg.which_ps + "/refill_W.p", "wb"))
+    print(np.abs(m.resid).mean())
+
+    m = find_aic_model(
+        full, in_situ, cfg.orders, cols=["T"], past_days=cfg.past_days, interaction=-1, naming="full_T"
+    )
+    pickle.dump(m, open("results/" + cfg.which_ps + "/full_T.p", "wb"))
+    print(np.abs(m.resid).mean())
+
+    m = find_aic_model(
+        full, in_situ, cfg.orders, cols=["W"], past_days=cfg.past_days, interaction=-1, naming="full_W"
+    )
+    pickle.dump(m, open("results/" + cfg.which_ps + "/full_W.p", "wb"))
+    print(np.abs(m.resid).mean())
+
+    m = find_aic_model(
+        refill,
+        in_situ,
+        cfg.orders,
+        cols=["T", "W"],
+        past_days=cfg.past_days,
+        interaction=-1,
+        naming="refill"
+    )
+    pickle.dump(m, open("results/" + cfg.which_ps + "/refill.p", "wb"))
+    print(np.abs(m.resid).mean())
+
+
+    m = find_aic_model(
+        full,
+        in_situ,
+        cfg.orders,
+        cols=["T", "W"],
+        past_days=cfg.past_days,
+        interaction=-1,
+        naming="full"       
+    )
+    pickle.dump(m, open("results/" + cfg.which_ps + "/full.p", "wb"))
+    print(np.abs(m.resid).mean())
 
     m = find_aic_model(
         refill,
@@ -299,9 +340,7 @@ def main(cfg: DictConfig):
         naming="refill_inter"
     )
     pickle.dump(m, open("results/" + cfg.which_ps + "/refill_inter.p", "wb"))
-    print(m.summary())
     print(np.abs(m.resid).mean())
-    print("Done.")
     
     m = find_aic_model(
         full,
@@ -314,9 +353,8 @@ def main(cfg: DictConfig):
         naming="full_inter"
     )
     pickle.dump(m, open("results/" + cfg.which_ps + "/full_inter.p", "wb"))
-
-    print(m.summary())
     print(np.abs(m.resid).mean())
+
     print("Done.")
 
 

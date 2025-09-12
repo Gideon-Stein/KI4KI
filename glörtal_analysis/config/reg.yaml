@@ -1,5 +1,5 @@
 orders: [0] # , [1,0,0], [0,1,0], [1,1,0], [1,0,1], [1,1,1]
-past_days: 2
-which_ps: "t+s" # 
-interaction: 2
-difference: True
+past_days: 2 # how many past days to consider.
+which_ps: "t+s" # which ps time series is used.
+interaction: 2 # specifies how the highest interaction terms that is considered for modelling (time steps)
+difference: True #whether to consider the difference between t0 and t-1
