@@ -15,7 +15,7 @@ from utils.data_parsing_tools import (
     load_data_bases,
 )
 from utils.regression_tools import find_best_order
-
+from pathlib import Path
 import hydra
 from omegaconf import DictConfig, OmegaConf
 
@@ -33,9 +33,7 @@ warnings.simplefilter("ignore", ConvergenceWarning)
 
 
 
-
-
-@hydra.main(version_base=None, config_path="conf", config_name="config.yaml")
+@hydra.main(version_base=None, config_path="conf", config_name="grid_config.yaml")
 def main(cfg: DictConfig):
 
     # Track runtime
@@ -57,6 +55,7 @@ def main(cfg: DictConfig):
     for location in locations:
         for direction in dirs:
             print("Evaluating for loc: " + location + " dir: " + direction)
+            # Expand all model combinations and build the list of combos to test
             for model_t in model_types:
                 P = np.arange(int(cfg.search.order_low[0]), int(cfg.search.order_high[0]))
                 D = np.arange(int(cfg.search.order_low[1]), int(cfg.search.order_high[1]))
@@ -84,6 +83,7 @@ def main(cfg: DictConfig):
                 )
 
                 print("Combos to test: " + str(len(combos)))
+                # Evaluate all the models that were specified on all locations.
                 results = find_best_order(
                     combos,
                     data[location][direction],
@@ -92,24 +92,21 @@ def main(cfg: DictConfig):
                     model_search=True,
                     parallel=cfg.parallel,
                 )
-
-                isExist = os.path.exists(cfg.save_path)
-                if not isExist:
+                # Saves all the scorings to specified location for later model selection.
+                if not os.path.exists(cfg.save_path):
                     os.makedirs(cfg.save_path)
                     print("New directory is created.")
+                
+                save_name = f"{location}_{direction}_{model_t}"
+                if cfg.remove_W:
+                    save_name += "_remove_W"
+                if cfg.remove_T:
+                    save_name += "_remove_T"
                 pickle.dump(
                     results,
                     open(
                         cfg.save_path
-                        + "/"
-                        + location
-                        + "_"
-                        + direction
-                        + "_"
-                        + model_t
-                        + "_results_stack.p",
-                        "wb",
-                    ),
+                        + "/" + save_name + "_results_stack.p","wb"),
                 )
 
     print(datetime.now() - start)

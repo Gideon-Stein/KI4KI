@@ -1,8 +1,6 @@
 import os
 import pickle
 import warnings
-from datetime import datetime
-from pandas import datetime
 import pandas as pd
 import pickle
 from statsmodels.tools.sm_exceptions import ConvergenceWarning
@@ -16,19 +14,12 @@ from omegaconf import DictConfig
 
 warnings.simplefilter("ignore", ConvergenceWarning)
 
-# Forecasting the left out year for now. (Other option can be added in the future.)
 
-
-@hydra.main(version_base=None, config_path="conf", config_name="config.yaml")
+@hydra.main(version_base=None, config_path="conf", config_name="forecast_config.yaml")
 def main(cfg: DictConfig):
 
-    start = datetime.now()
     # Load the complete data (So we only need to load the data once)
-    
-    
-    
     data, exogs = load_data_bases(cfg)
-
     locations = cfg.all_locs if cfg.loc == "X" else [cfg.loc]
     dirs = cfg.all_dirs if cfg.dir == "X" else [cfg.dir]
     model_types = cfg.all_model_types if cfg.model_type == "X" else [cfg.model_type]
@@ -49,9 +40,6 @@ def main(cfg: DictConfig):
                 # Loading grid result
 
                 # Quick fix so we include the univariate models also in the full search. 
-
-
-
                 result_stack = pickle.load(
                     open(
                         cfg.save_path
@@ -71,35 +59,35 @@ def main(cfg: DictConfig):
                 print(len(scores))
 
 
-                if "new" in cfg.save_path:
-
-                    for additional in ["_univariate","_remove_T","_remove_W"]:
-                        try:
-                            print("Add: " + additional)
-                            result_stack = pickle.load(
-                                open(
-                                    cfg.save_path + additional
-                                    + "/"
-                                    + location
-                                    + "_"
-                                    + direction
-                                    + "_"
-                                    + model_t
-                                    + "_results_stack.p",
-                                    "rb",
-                                )
+                # construct the scoring table for all runs.
+                for additional in ["univariate","remove_T","remove_W","remove_W_remove_T"]:
+                    try:
+                        print("Add: " + additional)
+                        result_stack = pickle.load(
+                            open(
+                                cfg.save_path 
+                                + "/"
+                                + location
+                                + "_"
+                                + direction
+                                + "_"
+                                + model_t 
+                                + "_"
+                                + additional
+                                + "_results_stack.p",
+                                "rb",
                             )
-                            print("Process_saves")
-                            scores2 = results_to_pd(result_stack)
-                            print(len(scores2))
-                            scores = pd.concat([scores, scores2]).reset_index(drop=True)
-                            print(len(scores))
-
-                        except:
+                        )
+                        print("Process_saves")
+                        scores2 = results_to_pd(result_stack)
+                        print(len(scores2))
+                        scores = pd.concat([scores, scores2]).reset_index(drop=True)
+                        print(len(scores))
+                    except:
                             print("No additional runs found for:" + additional +  " is this correct?")
                 print("Filtering:")
-                print(len(scores))
                 if cfg.search == "0_full_search.yaml" or cfg.search == "4_igarss_search.yaml": 
+                    print("No filters applied for full search space.")
                     pass
 
                 else:
@@ -143,10 +131,11 @@ def main(cfg: DictConfig):
                     if model_t == "sarimax":
                         scores = scores.loc[(scores["D"] < (cfg.search.order_high[1])) & (scores["D"] >= (cfg.search.order_low[1]))]
 
+                print("Items after applying filter:")
                 print(len(scores))
-                print(scores)
 
                 stack = []
+                # for each unique ps point, select the best scoring model.
                 for x in scores["Index"].unique():
                     stack.append(
                         scores[scores["Index"] == x]
@@ -155,7 +144,7 @@ def main(cfg: DictConfig):
                         .loc[:0]
                     )
                 best_params = pd.concat(stack)
-
+                # save the best models for eac hps point as table.
                 best_params.to_csv(
                     cfg.forecast_path
                     + "/"
@@ -166,12 +155,11 @@ def main(cfg: DictConfig):
                     + model_t
                     + "_selected_models.csv"
                 )
+                
 
-                # TODO Add a test here for consisteny (predict the old values again)
-                # TODO Add in sample prediction as output as before.
+                # print the best params for quick overview.
                 print(best_params[best_params.columns[:7]])
-                print(best_params[best_params.columns[7:14]])
-                print(cfg.save_path)
+                print(best_params[best_params.columns[7:14]]) # all exog params
                 output, model_summaries = forecast_with_best(
                     best_params,
                     data[location][direction],

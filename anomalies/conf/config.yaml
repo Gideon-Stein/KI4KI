@@ -1,3 +1,4 @@
 dir: "ps"
 source_path: "../raw_data/"  # Path to the Ruhrverband data folder
+cache_path: "../saves_and_results"
 all_locs: ["Moehne", "Fuerwigge", "Verse", "Lister", "Bigge", "Sorpe"]  # These are all available models

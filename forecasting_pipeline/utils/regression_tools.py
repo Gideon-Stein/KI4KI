@@ -253,7 +253,8 @@ def score_single_combo(
             long_pred_table = None
         pred_one_step_table = pd.concat(pred_one_step_table,axis=1)
 
-
+    # Transforms the predictions to the original data space and score the performance. 
+    # By doing this, the metrics actually correspond to mm.
     score_on_original_range_and_save(
         res_dict,
         test,
@@ -272,7 +273,6 @@ def score_single_combo(
 
 def score_model(combo, endog, exog, model_type, model_search, counter=None):
     # Loads the correct external terms and the PCI dataframe
-    
     if counter: 
         print("Run:", counter)
     (
@@ -286,6 +286,7 @@ def score_model(combo, endog, exog, model_type, model_search, counter=None):
         test_seasonality,
     ) = full_preprocessing_pipeline(endog, exog, combo, model_search)
     param_stamp = combo.export()[:-1]
+    # run model fit and return metricd
     result = score_single_combo(
         combo,
         train,
@@ -319,6 +320,6 @@ def find_best_order(
         return executor(tasks)
     else:
         return [
-            score_model(combo, endog, exog, model_type, model_search)
-            for combo in combos
+            score_model(combo, endog, exog, model_type, model_search,n)
+            for n,combo in enumerate(combos)
         ]

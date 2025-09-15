@@ -148,7 +148,6 @@ def txt_to_pandas(path):
 def results_to_pd(r):
     stack = []
     params = []
-    print(len(r))
     for x in r:
         if isinstance(x[-1],list):
             continue

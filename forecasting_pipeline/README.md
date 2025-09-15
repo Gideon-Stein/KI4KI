@@ -18,11 +18,14 @@ There are two main scripts. **model_grid.py** and **forecast_points.py**. Both u
 Via:
 
 ```
-python model_grid.py search=4_igarss_search.yaml save_path=results/res model_type=sarimax loc=Lister  dir=X parallel=True
+python model_grid.py search=4_igarss_search.yaml save_path="../save_and_results/igarss_new/ model_type=sarimax loc=Lister  dir=X all_dirs="["asc0", "ew", "ver", "desc0"]" 
+python model_grid.py search=4_igarss_search.yaml save_path="../save_and_results/igarss_new/ model_type=sarimax loc=Lister  dir=X all_dirs="["asc0", "ew", "ver", "desc0"]"  remove_T=True # ignores T completely
+python model_grid.py search=4_igarss_search.yaml save_path="../save_and_results/igarss_new/ model_type=sarimax loc=Lister  dir=X all_dirs="["asc0", "ew", "ver", "desc0"]" remove_W=True # ignores W_completely
+
 
 ```
 
-you can search all possible models for a specific config and location and save various performance metrices.
+You can reconstruct the entire search space of the IGARSS paper.
 
 
 Via:
