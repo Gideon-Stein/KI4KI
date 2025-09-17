@@ -60,20 +60,19 @@ def main(cfg: DictConfig):
 
 
                 # construct the scoring table for all runs.
-                for additional in ["univariate","remove_T","remove_W","remove_W_remove_T"]:
+                for additional in ["univariate","remove_T","remove_W"]:
                     try:
                         print("Add: " + additional)
                         result_stack = pickle.load(
                             open(
-                                cfg.save_path 
+                                cfg.save_path + "_"+ additional
                                 + "/"
                                 + location
                                 + "_"
                                 + direction
                                 + "_"
                                 + model_t 
-                                + "_"
-                                + additional
+
                                 + "_results_stack.p",
                                 "rb",
                             )

@@ -1,11 +1,7 @@
 import os
-import pickle
-import warnings
 from datetime import datetime
 import pandas as pd
-import pickle
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import torch
@@ -60,12 +56,6 @@ def tfm(
         backend="gpu",
     )
     tfm.load_from_checkpoint(repo_id="google/timesfm-1.0-200m")
-
-    forecast_input = [
-        np.sin(np.linspace(0, 20, 100)),
-        np.sin(np.linspace(0, 20, 200)),
-        np.sin(np.linspace(0, 20, 400)),
-    ]
 
     if parallel:
         frequency_input = (
@@ -289,7 +279,7 @@ def zero_shot(endog, exog_base, model_type, parallel=False):
     return final
 
 
-@hydra.main(version_base=None, config_path="../conf", config_name="config.yaml")
+@hydra.main(version_base=None, config_path="../conf", config_name="forecast_config.yaml")
 def main(cfg: DictConfig):
 
     start = datetime.now()

@@ -1,0 +1,4 @@
+- search=3_no_exogs.yaml
+- save_path=../save_and_results/new/journal/journal_new_univariate
+- model_type=X
+- dir=lot

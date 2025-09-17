@@ -1,4 +1,3 @@
-
 import numpy as np
 import scipy.optimize
 import scipy
@@ -41,9 +40,7 @@ def select_daily_exog(
     return exog
 
 
-def prep_modeling_linear(
-    endog, exog, autoregressive
-):
+def prep_modeling_linear(endog, exog, autoregressive):
     temporary = exog.copy()
     # add autoregressive components as additional variables
     if autoregressive > 0:
@@ -51,11 +48,19 @@ def prep_modeling_linear(
             temporary[str(value)] = endog.shift(value).values
     temporary["const"] = 1.0
     temporary["trend"] = np.arange(0, 1, 1 / len(temporary["const"]))
-    
+
     return temporary
-    
-    
-def linear_pipeline(target, in_situ, cols=["T"], past_days=10, autoregressive=1, return_temporary=False, min_max= None):
+
+
+def linear_pipeline(
+    target,
+    in_situ,
+    cols=["T"],
+    past_days=10,
+    autoregressive=1,
+    return_temporary=False,
+    min_max=None,
+):
     min_max_values = None
     stack = []
     for col in cols:
@@ -66,7 +71,7 @@ def linear_pipeline(target, in_situ, cols=["T"], past_days=10, autoregressive=1,
                 target.index,
                 variable_name=col,
             ).set_index("date")
-        )   
+        )
     exog = pd.concat(stack, axis=1)
     assert exog.isnull().sum().max() < 2, "Nans in exogenous variables."
     if min_max is not None:
@@ -78,18 +83,17 @@ def linear_pipeline(target, in_situ, cols=["T"], past_days=10, autoregressive=1,
         min_max_values = (exog.min(), exog.max(), target.min(), target.max())
         exog = (exog - exog.min()) / (exog.max() - exog.min())
         target = (target - target.min()) / (target.max() - target.min())
-        
+
     exog.fillna(value=exog.mean(), inplace=True)
     temporary = prep_modeling_linear(target, exog, autoregressive=autoregressive)
-    if return_temporary: 
-        return target, temporary 
+    if return_temporary:
+        return target, temporary
     olsmod = sm.OLS(
         exog=temporary.fillna(method="backfill"),
         endog=target,
-    )    
+    )
     olsres = olsmod.fit()
     return olsres, min_max_values
-
 
 
 def detrend_via_model(df, return_trend=False, return_complete_component=False):
@@ -118,160 +122,172 @@ def detrend_via_model(df, return_trend=False, return_complete_component=False):
     else:
         return table
 
+
 def add_trend_increase(
-        df,
-        increase_start_index=150,
-        increase_strength= 1,
-        nonlinear_trend =False, 
-        nl_trend_strength = 2
-
+    df,
+    increase_start_index=150,
+    increase_strength=1,
+    nonlinear_trend=False,
+    nl_trend_strength=2,
 ):
-        # We take the original trend of the time series and increase it from start_index onwards.
-        # We scale the strength of the increase with increase_strength. 
-        # increase strength of 1 denotes adding 100% of the original trend on top.
-        # as an alternative we can add an exponential increase on top.
-        new_df  = df.copy()
-        original_trends = detrend_via_model(df, return_trend=True)       
-        for n, x in enumerate(df.columns):
-                # trend is a scaling of the original trend.
-                a = np.arange(0,
-                              original_trends[n][0] *len(df),
-                                original_trends[n][0]
-                                ) + original_trends[n][1]
-                a = a[:len(df)]
-                a[:increase_start_index] = 0 
-                a = a * increase_strength
-                a = a - a[increase_start_index]
-                a[:increase_start_index] = 0 
-                new_df[x] += a
-                if nonlinear_trend: 
-                        new_df[x] += a**nl_trend_strength
-        return new_df
+    # We take the original trend of the time series and increase it from start_index onwards.
+    # We scale the strength of the increase with increase_strength.
+    # increase strength of 1 denotes adding 100% of the original trend on top.
+    # as an alternative we can add an exponential increase on top.
+    new_df = df.copy()
+    original_trends = detrend_via_model(df, return_trend=True)
+    for n, x in enumerate(df.columns):
+        # trend is a scaling of the original trend.
+        a = (
+            np.arange(0, original_trends[n][0] * len(df), original_trends[n][0])
+            + original_trends[n][1]
+        )
+        a = a[: len(df)]
+        a[:increase_start_index] = 0
+        a = a * increase_strength
+        a = a - a[increase_start_index]
+        a[:increase_start_index] = 0
+        new_df[x] += a
+        if nonlinear_trend:
+            new_df[x] += a**nl_trend_strength
+    return new_df
 
 
-def sinfunc(t,A, w, p, c): 
-    return A * np.sin(w*t + p) + c
+def sinfunc(t, A, w, p, c):
+    return A * np.sin(w * t + p) + c
 
-def cosfunc(t,A, w, p, c): 
-    return A * np.cos(w*t + p) + c
+
+def cosfunc(t, A, w, p, c):
+    return A * np.cos(w * t + p) + c
+
 
 def fit_sin(yy, fixed_freq=61):
     '''Fit sin to the input time sequence, and return fitting parameters "amp", "omega", "phase", "offset", "freq", "period" and "fitfunc"'''
     tt = np.arange(len(yy))
     yy = np.array(yy)
-    ff = np.fft.fftfreq(len(tt), (tt[1]-tt[0]))   # assume uniform spacing
+    ff = np.fft.fftfreq(len(tt), (tt[1] - tt[0]))  # assume uniform spacing
     Fyy = abs(np.fft.fft(yy))
-    guess_freq = abs(ff[np.argmax(Fyy[1:])+1])   # excluding the zero frequency "peak", which is related to offset
-    guess_amp = np.std(yy) * 2.**0.5
+    guess_freq = abs(
+        ff[np.argmax(Fyy[1:]) + 1]
+    )  # excluding the zero frequency "peak", which is related to offset
+    guess_amp = np.std(yy) * 2.0**0.5
     guess_offset = np.mean(yy)
-    guess = np.array([guess_amp, 2.*np.pi*guess_freq, 0., guess_offset])
+    guess = np.array([guess_amp, 2.0 * np.pi * guess_freq, 0.0, guess_offset])
 
     popt, pcov = scipy.optimize.curve_fit(sinfunc, tt, yy, p0=guess)
     A, w, p, c = popt
-    f = w/(2.*np.pi)
-    fitfunc = lambda t: A * np.sin(w*t + p) + c
-    return {"amp": A, "omega": w, "phase": p, "offset": c, "freq": f, "period": 1./f, "fitfunc": fitfunc, "maxcov": np.max(pcov), "rawres": (A,w,p,c)}
+    f = w / (2.0 * np.pi)
+    fitfunc = lambda t: A * np.sin(w * t + p) + c
+    return {
+        "amp": A,
+        "omega": w,
+        "phase": p,
+        "offset": c,
+        "freq": f,
+        "period": 1.0 / f,
+        "fitfunc": fitfunc,
+        "maxcov": np.max(pcov),
+        "rawres": (A, w, p, c),
+    }
 
 
 def add_seasonal_cycle_increase(
-        df,
-        increase_start_index=150,
-        increase_strength= 0.002,
+    df,
+    increase_start_index=150,
+    increase_strength=0.002,
 ):
-        # We extract the yearly cycle of original ts, and increase the amplitude with x from a certain index onwards.
-        new_df  = df.copy()
-        # remove trend first to get the cycle
-        detrend = detrend_via_model(df.interpolate())
-        new_df = df.copy()    
-        for n, x in enumerate(df.columns):
-            # fit sin to the data with a fixed period
-            A,w,p,c = fit_sin(detrend[x].values)["rawres"]
-            # calculate a new seasonal cycle where only the amplitude increases
-            a = [sinfunc(x,A-((x-increase_start_index)*increase_strength), w, p, c) for x in range(len(df))]
-            b = fit_sin(detrend[x].values)["fitfunc"](np.arange(len(df)))
-            # substract from original cycle to see what we have to add aditionally
-            add = a-b
-            add[:increase_start_index] = 0
-            # add on the original data.
-            new_df[x] += add
-        return new_df
+    # We extract the yearly cycle of original ts, and increase the amplitude with x from a certain index onwards.
+    new_df = df.copy()
+    # remove trend first to get the cycle
+    detrend = detrend_via_model(df.interpolate())
+    new_df = df.copy()
+    for n, x in enumerate(df.columns):
+        # fit sin to the data with a fixed period
+        A, w, p, c = fit_sin(detrend[x].values)["rawres"]
+        # calculate a new seasonal cycle where only the amplitude increases
+        a = [
+            sinfunc(x, A - ((x - increase_start_index) * increase_strength), w, p, c)
+            for x in range(len(df))
+        ]
+        b = fit_sin(detrend[x].values)["fitfunc"](np.arange(len(df)))
+        # substract from original cycle to see what we have to add aditionally
+        add = a - b
+        add[:increase_start_index] = 0
+        # add on the original data.
+        new_df[x] += add
+    return new_df
 
 
 def add_jump(
-        df,
-        increase_start_index=150,
-        increase_strength = 1,
+    df,
+    increase_start_index=150,
+    increase_strength=1,
 ):
-        # simply add constant on top from index onwards
-        new_df  = df.copy()
-        add = np.zeros(len(df))
-        add[increase_start_index:] = increase_strength
+    # simply add constant on top from index onwards
+    new_df = df.copy()
+    add = np.zeros(len(df))
+    add[increase_start_index:] = increase_strength
 
-        for n, x in enumerate(df.columns):
-            # add on the original data.
-            new_df[x] += add
-        return new_df
+    for n, x in enumerate(df.columns):
+        # add on the original data.
+        new_df[x] += add
+    return new_df
+
 
 def add_outlier_group(
-        df,
-        increase_start_index=150,
-        n_consecutive_outliers = 4,
-        up= True, 
-        increase_strength = 1 #specifies the std of the gaussian noise addition
+    df,
+    increase_start_index=150,
+    n_consecutive_outliers=4,
+    up=True,
+    increase_strength=1,  # specifies the std of the gaussian noise addition
 ):
-        # simply add noise on top from index onwards (positive or negative)
-        new_df  = df.copy()
+    # simply add noise on top from index onwards (positive or negative)
+    new_df = df.copy()
+    add = np.zeros(len(df))
+
+    for n, x in enumerate(df.columns):
+
         add = np.zeros(len(df))
+        noise = np.abs(
+            np.random.normal(scale=increase_strength, size=n_consecutive_outliers)
+        )
+        if not up:
+            noise = noise * -1
+        add[increase_start_index : increase_start_index + n_consecutive_outliers] = (
+            noise
+        )
+        # add on the original data.
+        new_df[x] += add
+    return new_df
 
-        for n, x in enumerate(df.columns):
 
-            add = np.zeros(len(df))
-            noise = np.abs(np.random.normal(scale = increase_strength, size = n_consecutive_outliers))
-            if not up: 
-                  noise = noise*-1
-            add[increase_start_index:increase_start_index+n_consecutive_outliers] = noise
-            # add on the original data.
-            new_df[x] += add
-        return new_df
+def add_event_group(df, event, increase_start_index=150):
+    # agnostic function to replace a certain part of the original ts with a set of events
+    new_df = df.copy()
+    for n, x in enumerate(df.columns):
+        add = new_df[x]
+        add[increase_start_index : increase_start_index + len(event[n])] = event[n]
+        # add on the original data.
+        new_df[x] = add
+    return new_df
 
 
-def add_event_group(
-        df,
-        event,
-        increase_start_index=150
-):
-        # agnostic function to replace a certain part of the original ts with a set of events
-        new_df  = df.copy()
-        for n, x in enumerate(df.columns):
-            add = new_df[x]
-            add[increase_start_index:increase_start_index + len(event[n])] = event[n]
-            # add on the original data.
-            new_df[x] = add
-        return new_df
+def simple_noise_event(df, length, std=0.05, increase_start_index=150):
+    out = []
+    for x in df:
+        mean = df[x][increase_start_index : increase_start_index + length].mean()
+        out.append(np.random.normal(loc=mean, size=(length), scale=std))
+    return out
 
-def simple_noise_event(
-        df,
-        length, 
-        std = 0.05,
-        increase_start_index=150
-        ):
-        out = []
-        for x in df: 
-                mean = df[x][increase_start_index: increase_start_index+length].mean()
-                out.append(np.random.normal(loc = mean, size= (length), scale= std))
-        return out
 
-def reverse_event(
-        df,
-        length, 
-        increase_start_index=150
-        ):
-        out = []
-        for x in df: 
-                replace = np.flip(df[x][increase_start_index: increase_start_index+length].values)
-                out.append(replace)
-        return out
-
+def reverse_event(df, length, increase_start_index=150):
+    out = []
+    for x in df:
+        replace = np.flip(
+            df[x][increase_start_index : increase_start_index + length].values
+        )
+        out.append(replace)
+    return out
 
 
 def model(
@@ -285,7 +301,7 @@ def model(
     plot_bases=True,
     naming="Bad model",
     text_pos=0.8,
-    color = "orange"
+    color="orange",
 ):
     targetT, temporaryT = linear_pipeline(
         train,
@@ -379,14 +395,14 @@ def model(
         # hist_q += 1e-10
         # stack2.append(entropy(hist_p, hist_q))
 
-    #mean = test_resids[:40].mean()
-    #std = test_resids[:40].std()
-    #Z = (test_resids[40:] - mean) / std
+    # mean = test_resids[:40].mean()
+    # std = test_resids[:40].std()
+    # Z = (test_resids[40:] - mean) / std
     # Z.abs().cumsum().plot(ax=ax[1,1], label=naming + "Accumulated Z-Score")
 
     # Z.abs().plot(ax=ax[1,1], label=naming + "Accumulated Z-Score")
-    #print(stack2)
-    #ax[2].plot(stack2, label=naming, color=color)
+    # print(stack2)
+    # ax[2].plot(stack2, label=naming, color=color)
 
     ax[2].plot(stack, label=naming, color=color)
     ax[2].set_title("Shuffle test p-values", fontsize=12)
@@ -394,21 +410,26 @@ def model(
     ax[1].set_title("Distribution over absolute residuals \n during normal test window")
 
 
-
-
 def display_anomaly(test_case, data):
-    
+
     train = test_case[:200]
     test = test_case[200:]
     fig, ax = plt.subplots(figsize=(6, 3))
-    data.rename(columns={"720593": "Train"}).interpolate()[:250].plot(ax=ax,linewidth=2, color="darkblue")
-    data.rename(columns={"720593": "Original TS"}).interpolate()[250:].plot(ax=ax,linewidth=2, color="darkblue", alpha=0.4)
+    data.rename(columns={"720593": "Train"}).interpolate()[:250].plot(
+        ax=ax, linewidth=2, color="darkblue"
+    )
+    data.rename(columns={"720593": "Original TS"}).interpolate()[250:].plot(
+        ax=ax, linewidth=2, color="darkblue", alpha=0.4
+    )
 
-    test.rename(columns={"720593": "Anomalous TS"}).iloc[50:].plot(ax=ax, color="red", linewidth=2)
-    test.rename(columns={"720593": "Calibration interval"}).iloc[:50].plot(ax=ax, color="green", linewidth=2)
+    test.rename(columns={"720593": "Anomalous TS"}).iloc[50:].plot(
+        ax=ax, color="red", linewidth=2
+    )
+    test.rename(columns={"720593": "Calibration interval"}).iloc[:50].plot(
+        ax=ax, color="green", linewidth=2
+    )
 
     plt.title("Test Case: Lister, asc0, 720593")
-
 
     plt.vlines(
         x=train.index[-1],

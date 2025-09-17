@@ -98,10 +98,6 @@ def main(cfg: DictConfig):
                     print("New directory is created.")
                 
                 save_name = f"{location}_{direction}_{model_t}"
-                if cfg.remove_W:
-                    save_name += "_remove_W"
-                if cfg.remove_T:
-                    save_name += "_remove_T"
                 pickle.dump(
                     results,
                     open(

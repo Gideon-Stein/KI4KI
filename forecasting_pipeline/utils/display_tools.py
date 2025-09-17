@@ -190,7 +190,7 @@ def display_predictions_2(
 ):
 
     if key != "Radial":
-        tickPos = list(np.where(d.index.weekofyear == 1)[0])
+        tickPos = list(np.where(d.index.isocalendar().week == 1)[0])
         tickPos.append(tickPos[-1] + 66)
         tickLabels = np.arange(2016, 2022)
     else:

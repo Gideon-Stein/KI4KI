@@ -80,7 +80,7 @@ def perform_modeling_ada(endog, exog, combo):
         print("Estimator not found.")
 
     regr = AdaBoostRegressor(
-        base_estimator=base_est,
+        estimator=base_est,
         n_estimators=combo.n_estimators,
         learning_rate=combo.learning_rate,
         loss="linear",

@@ -14,7 +14,7 @@ remove_everything: False # Used for baseline forecasts to only keep the actual 4
 
 
 source_path: "../raw_data/"
-cache_path: "../saves_and_results"
+cache_path: "../save_and_results"
 all_locs: ["Moehne", "Fuerwigge", "Verse", "Lister", "Bigge", "Sorpe"]  # These are all available models
 all_dirs: ["asc0", "ew", "ver", "desc0"] #  "asc1", "desc1" # Directions (not all are available everywhere)
-all_model_types: ["linear", "sarimax", "forest", "ada"] # model types that are available
+all_model_types: ["linear", "sarimax", "forest", "ada"] # run var seperate as it crashes the lot (just one var).

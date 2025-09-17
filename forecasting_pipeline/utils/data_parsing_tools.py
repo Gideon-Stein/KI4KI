@@ -41,6 +41,7 @@ def load_location(path, loc):
         x for x in listdir(path / loc / "Descending_LineOfSight") if x[-4:] == ".txt"
     ]
     assert len(name) != 0, "No files detected!"
+    name = sorted(name, reverse=True)
     for n, x in enumerate(name):
         data["desc" + str(n)] = txt_to_pandas(path / loc / "Descending_LineOfSight" / x)
 
@@ -48,6 +49,7 @@ def load_location(path, loc):
         x for x in listdir(path / loc / "Ascending_LineOfSight") if x[-4:] == ".txt"
     ]
     assert len(name) != 0, "No files detected!"
+    name = sorted(name, reverse=True)
     for n, x in enumerate(name):
         data["asc" + str(n)] = txt_to_pandas(path / loc / "Ascending_LineOfSight" / x)
     return data
@@ -204,7 +206,7 @@ def load_data_bases(cfg):
             data = pickle.load(open(lot_cache, "rb"))
             print("Load cached data")
         else:
-            data = get_lot()
+            data = get_lot(p=cfg.source_path + "/Ruhrverband/Moehne/Moehne_Lotanlage.xlsx")
             pickle.dump(data, open(lot_cache, "wb"))
     else:
         if endog_cache.is_file():

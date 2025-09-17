@@ -1,0 +1,6 @@
+- save_path=../save_and_results/old/journal/journal_new
+- forecast_path=../save_and_results/new/journal/3
+- criteria=MAE
+- dir=desc1
+- model_type=X
+- search=3_no_exogs.yaml

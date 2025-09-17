@@ -1,11 +1,15 @@
 
 # KI4KI - Künstliche Intelligenz für klimaresilientes Infrastrukturmonitoring  
 
+
+
+      
+
 > Monitoring dam infrastructure via Remote sensing technology
 
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 
-This repository contains research contributions and tools for forecasting dam deformations based on environmental drivers using PSI (Persistent Scatterer Interferometry) and pendulum swing time-series data.
+This repository contains research contributions and tools for forecasting dam deformations based on environmental drivers using PSI (Persistent Scatterer Interferometry) and pendulum swing time-series data. Note, this is work in process.
 
 ## Table of Contents
 
@@ -13,7 +17,6 @@ This repository contains research contributions and tools for forecasting dam de
 - [Install](#install)
 - [Usage](#usage)
 - [Structure](#structure)
-- [API](#api)
 - [Publications](#publications)
 - [Contributing](#contributing)
 - [License](#license)
@@ -22,11 +25,11 @@ This repository contains research contributions and tools for forecasting dam de
 
 ## Background
 
-The KI4KI project focuses on developing artificial intelligence solutions for climate-resilient infrastructure monitoring, specifically targeting dam deformation prediction. Using satellite-based Persistent Scatterer Interferometry (PSI) data combined with environmental variables, this repository provides tools for a potential future early warning system for infrastructure management.
+The KI4KI project focuses on machine learning solutions for climate-resilient infrastructure monitoring, specifically targeting dam deformation prediction. Using satellite-based Persistent Scatterer Interferometry (PSI) data combined with environmental variables, this repository provides tools for a potential future early warning system for infrastructure management.
 
 ### Key Features
 
-- **Time-series forecasting**: ARIMAX-based models for dam deformation prediction
+- **Time-series forecasting**: A number of forecasting models including linear models and foundational approaches
 - **Multi-modal data integration**: Combines PSI, weather, and environmental data
 - **Grid search optimization**: Automated hyperparameter tuning for model selection
 - **Scalable pipeline**: Supports processing multiple monitoring points simultaneously
@@ -46,7 +49,6 @@ This codebase supports the following research publications:
 
 - Tested with Python 3.13
 - Conda package manager
-- Access to proprietary data sources (see [Data Requirements](#data-requirements))
 
 ### Environment Setup
 
@@ -54,23 +56,20 @@ This codebase supports the following research publications:
 ```bash
 git clone https://github.com/Gideon-Stein/KI4KI.git
 cd KI4KI
+mkdir save_and_results/
 ```
 
 2. Create and activate the conda environment:
 ```bash
-conda env create -f environment.yml
-conda activate dam_test
-```
+conda env create -f ki4ki.yml
+conda activate ki4ki
 
+```
 
 ### Data Requirements
 
-**Note**: This project requires proprietary datasets that are not publicly available:
 
-- **Weather Data ("Daten")**: Downloaded from Draco platform
-- **PSI Data ("Datenpaket_BBD")**: Persistent Scatterer Interferometry data from the German Ground Motion Service (BBD)
 
-Contact the maintainers or data providers for access permissions.
 
 ## Usage
 

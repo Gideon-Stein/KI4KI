@@ -1,0 +1,61 @@
+search:
+  order_high:
+  - 3
+  - 2
+  - 3
+  order_low:
+  - 1
+  - 0
+  - 0
+  fourier_orders:
+  - 0
+  mean_orders:
+  - 0
+  exog_steps: []
+  decompose:
+  - 0
+  - 1
+  n_estimators:
+  - 50
+  - 250
+  max_depth:
+  - None
+  - 3
+  - 7
+  estimator:
+  - dt
+  - linear
+  learning_rate:
+  - 1.0
+  - 0.1
+  interaction:
+  - 0
+model_type: X
+loc: Moehne
+dir: desc1
+forecast_path: ../save_and_results/new/journal/3
+save_path: ../save_and_results/old/journal/journal_new
+criteria: MAE
+parallel: false
+remove_W: false
+remove_T: false
+remove_everything: false
+source_path: ../raw_data/
+cache_path: ../save_and_results
+all_locs:
+- Moehne
+- Fuerwigge
+- Verse
+- Lister
+- Bigge
+- Sorpe
+all_dirs:
+- asc0
+- ew
+- ver
+- desc0
+all_model_types:
+- linear
+- sarimax
+- forest
+- ada

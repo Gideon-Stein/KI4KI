@@ -14,14 +14,14 @@ from functools import reduce
 from statsmodels.tsa.deterministic import Fourier
 import statsmodels.api as sm
 
-from utils.filters import (
+from forecasting_pipeline.utils.filters import (
     custom_fourier_terms,
     cosfunc,
     fit_sin,
     decompose_data,
 )
 
-from utils.baseline_tools import (
+from forecasting_pipeline.utils.baseline_tools import (
     apply_filter,
     detrend_via_model,
     dl_to_raw_ts_new,

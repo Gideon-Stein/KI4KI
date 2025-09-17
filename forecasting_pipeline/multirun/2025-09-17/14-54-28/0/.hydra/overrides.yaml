@@ -1,0 +1,7 @@
+- save_path=../save_and_results/old/igarss/igarss_new
+- forecast_path=../save_and_results/new/igarss/fc_igarss_baseline
+- criteria=MAPE
+- dir=X
+- model_type=sarimax
+- search=1_baseline.yaml
+- loc=Lister

@@ -10,8 +10,8 @@ from statsmodels.tools.sm_exceptions import ConvergenceWarning
 
 import sys
 sys.path.append("..")
-from utils.gloer_tools import load_gloer, exog_gloer, weather_gloer, make_model_hp_list, find_best_order_gloer
-from utils.filters import decompose_data
+from glörtal_analysis.legacy_content.gloer_tools import load_gloer, exog_gloer, weather_gloer, make_model_hp_list, find_best_order_gloer
+from forecasting_pipeline.utils.filters import decompose_data
 
 warnings.simplefilter('ignore', ConvergenceWarning)
 

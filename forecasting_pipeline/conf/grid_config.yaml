@@ -9,7 +9,6 @@ criteria: "MSE"
 parallel: False   # Does Multiprocessing
 remove_W: False # Runs all specifications but completely removes W
 remove_T: False # Runs all specifications but completely removes T
-remove_everything: False # Used for baseline forecasts to only keep the actual 4 baseline models.
 
 
 source_path: "../raw_data/"
