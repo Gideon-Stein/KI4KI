@@ -56,7 +56,6 @@ This codebase supports the following research publications:
 ```bash
 git clone https://github.com/Gideon-Stein/KI4KI.git
 cd KI4KI
-wget 
 mkdir save_and_results/
 mkdir imgs
 
