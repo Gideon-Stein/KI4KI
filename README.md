@@ -75,7 +75,7 @@ unzip raw_data.zip
 rm raw_data.zip
 ```
 
-### Model search and forecasting results
+4. Model search and forecasting results (optional)
 
 We provide the full data stack from our publication as a release. 
 It can be used to reproduce the results from our papers without running everything. 
