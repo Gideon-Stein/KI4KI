@@ -130,10 +130,10 @@ KI4KI/
 ## Usage
 
 Sub projects provide further explanations.
-In anomalies, we provide code for an early warning strategy based on residual anomalies. Along with this, we provide ways to generate synthetic anomalies
+In anomalies, we provide code for an early warning strategy based on residual anomalies. Along with this, we provide ways to generate synthetic anomalies.
 
 
-In glörtal_analysis, we investigate the effects of a full dam drainage
+In glörtal_analysis, we investigate the effects of a full dam drainage.
 
 In forecasting_pipeline we include a large stack of forecasting tools that can be used to forecast either PS-time series or pendulum swing measurements.
 
@@ -208,7 +208,7 @@ This project is licensed under the [MIT LICENSE](https://opensource.org/license/
 
 ## Maintainers
 
-[@GideonStein](https://github.com/Gideon-Stein) - Primary maintainer and lead developer
+[@GideonStein](https://github.com/Gideon-Stein) - Primary maintainer and lead developer.
 
 For questions regarding the research methodology or technical implementation, please open an issue or contact the maintainer directly.
 
