@@ -1,18 +1,17 @@
 defaults:
-  - search: 0_full_search.yaml
+  - search: 0_full_search.yaml  # Default search configuration file
 
 model_type: "linear"
-loc: "Moehne"
-dir: "lot"
-save_path: "../save_and_results/igarss_new/"
-criteria: "MSE"
-parallel: False   # Does Multiprocessing
-remove_W: False # Runs all specifications but completely removes W
-remove_T: False # Runs all specifications but completely removes T
+loc: "Moehne"  # Location name for the forecast
+dir: "lot"  # Direction or subfolder for saving results
+save_path: "../save_and_results/igarss_new/"  # Path to save results
+criteria: "MSE"  # Evaluation metric (Mean Squared Error)
+parallel: False   # Enable multiprocessing
+remove_W: False  # Remove W variable from specifications
+remove_T: False  # Remove T variable from specifications
 
-
-source_path: "../raw_data/"
-cache_path: "../save_and_results"
-all_locs: ["Moehne", "Fuerwigge", "Verse", "Lister", "Bigge", "Sorpe"]  # These are all available models
-all_dirs: ["asc0", "ew", "ver", "desc0",] # Directions (not all are available everywhere) #  "asc1", "desc1"
-all_model_types: ["linear", "sarimax", "forest", "ada"] # model types that are available
+source_path: "../raw_data/"  # Path to source/raw data
+cache_path: "../save_and_results"  # Path to cache or intermediate results
+all_locs: ["Moehne", "Fuerwigge", "Verse", "Lister", "Bigge", "Sorpe"]  # All available locations/models
+all_dirs: ["asc0", "ew", "ver", "desc0"]  # Directions (not all are available everywhere)
+all_model_types: ["linear", "sarimax", "forest", "ada"]  # Available model types

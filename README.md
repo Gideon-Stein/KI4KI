@@ -11,6 +11,11 @@
 
 This repository contains research contributions and tools for forecasting dam deformations based on environmental drivers using PSI (Persistent Scatterer Interferometry) and pendulum swing time-series data. Note, this is work in process.
 
+
+
+
+<img src="imgs/teaser.png" width="300" alt="Image of Forecasts">
+
 ## Table of Contents
 
 - [Background](#background)
