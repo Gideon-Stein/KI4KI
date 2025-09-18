@@ -1,6 +1,0 @@
-- search=0_full_search.yaml
-- save_path=../save_and_results/new/journal/journal_new_remove_W
-- model_type=linear
-- dir=desc1
-- parallel=False
-- remove_W=True

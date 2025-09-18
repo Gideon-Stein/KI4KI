@@ -1,6 +1,0 @@
-- save_path=../save_and_results/old/journal/journal_new
-- forecast_path=../save_and_results/new/journal/0
-- criteria=MAE
-- dir=desc1
-- model_type=var
-- search=0_full_search.yaml
