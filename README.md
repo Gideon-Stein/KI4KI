@@ -61,7 +61,6 @@ This codebase supports the following research publications:
 ```bash
 git clone https://github.com/Gideon-Stein/KI4KI.git
 cd KI4KI
-wget 
 mkdir save_and_results/
 mkdir imgs
 
@@ -81,7 +80,7 @@ unzip raw_data.zip
 rm raw_data.zip
 ```
 
-### Model search and forecasting results
+4. Model search and forecasting results (optional)
 
 We provide the full data stack from our publication as a release. 
 It can be used to reproduce the results from our papers without running everything. 
@@ -94,70 +93,6 @@ rm experimental_results.zip
 mv old save_and_results/
 ```
 
-
-
-## Usage
-
-### Basic Forecasting Pipeline
-
-The system provides a complete pipeline for dam deformation forecasting using ARIMAX models.
-
-#### 1. Model Grid Search
-
-To find optimal model parameters for all PCI points:
-
-```bash
-python forecasting_analysis/model_grid.py --savePath /path/to/results --loc LOCATION --dir DIRECTION
-```
-
-Parameters:
-- `--savePath`: Directory to save model results
-- `--loc`: Specific location code (optional, uses all locations if not specified)
-- `--dir`: Direction code (optional, uses all directions if not specified)
-
-#### 2. Generate Forecasts
-
-After grid search completion, generate forecasts for 2021:
-
-```bash
-python forecasting_analysis/forecast_points.py --savePath /path/to/results --loc LOCATION --dir DIRECTION
-```
-
-#### 3. Export Results
-
-Process and format the forecasting results:
-
-```bash
-jupyter notebook export_results.ipynb
-```
-
-### Configuration
-
-Model parameters and data paths can be configured in `forecasting_analysis/conf/config.yaml`. Key settings include:
-
-- Data source paths
-- Model hyperparameter ranges
-- Output directories
-- Processing options
-
-### Example Workflow
-
-```bash
-# 1. Set up environment
-conda activate dam_test
-
-# 2. Configure data paths in config.yaml
-# Edit forecasting_analysis/conf/config.yaml
-
-# 3. Run grid search for all points
-python forecasting_analysis/model_grid.py --savePath ./results
-
-# 4. Generate forecasts
-python forecasting_analysis/forecast_points.py --savePath ./results
-
-# 5. Analyze results
-jupyter notebook check_results.ipynb
-```
 
 ## Structure
 
@@ -200,10 +135,10 @@ KI4KI/
 ## Usage
 
 Sub projects provide further explanations.
-In anomalies, we provide code for an early warning strategy based on residual anomalies. Along with this, we provide ways to generate synthetic anomalies
+In anomalies, we provide code for an early warning strategy based on residual anomalies. Along with this, we provide ways to generate synthetic anomalies.
 
 
-In glörtal_analysis, we investigate the effects of a full dam drainage
+In glörtal_analysis, we investigate the effects of a full dam drainage.
 
 In forecasting_pipeline we include a large stack of forecasting tools that can be used to forecast either PS-time series or pendulum swing measurements.
 
@@ -278,7 +213,7 @@ This project is licensed under the [MIT LICENSE](https://opensource.org/license/
 
 ## Maintainers
 
-[@GideonStein](https://github.com/Gideon-Stein) - Primary maintainer and lead developer
+[@GideonStein](https://github.com/Gideon-Stein) - Primary maintainer and lead developer.
 
 For questions regarding the research methodology or technical implementation, please open an issue or contact the maintainer directly.
 
