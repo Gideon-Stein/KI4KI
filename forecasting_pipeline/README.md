@@ -40,7 +40,7 @@ After grid search completion, you can select the best model and perform a test d
 ```bash
 python forecast_points.py -m save_path=../path/to/search/results forecast_path=path/to/dir/ criteria=MAE dir=DIRECTION model_type=sarimax loc=LOCATION
 ```
-### 3. Display
+#### 3. Display
 
 In the Jupyter Notebooks of the publications you can find a number of ways to display the results.
 
