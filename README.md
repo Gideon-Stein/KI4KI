@@ -14,7 +14,7 @@ This repository contains research contributions and tools for forecasting dam de
 
 
 
-<img src="imgs/teaser.png" width="300" alt="Image of Forecasts">
+<img src="imgs/teaser.png" width="800" alt="Image of Forecasts">
 
 ## Table of Contents
 
