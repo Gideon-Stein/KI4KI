@@ -49,11 +49,7 @@ In the Jupyter Notebooks of the publications you can find a number of ways to di
 ### Configuration
 
 Model parameters and data paths can be configured in `forecasting_analysis/conf/config.yaml`. Key settings include:
-
-- Data source paths
-- Model hyperparameter ranges
-- Output directories
-- Processing options
+Descriptions of the parameters are added there.
 
 
 
