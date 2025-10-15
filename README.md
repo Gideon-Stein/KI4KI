@@ -226,7 +226,7 @@ This project is licensed under the [MIT LICENSE](https://opensource.org/license/
 - [@GideonStein](https://github.com/Gideon-Stein) - Primary maintainer and lead developer.
 - [@jziemer1996](https://github.com/jziemer1996) - Co-maintainer and project coordinator.
 
-For questions regarding the research methodology or technical implementation, please open an issue or contact the maintainer directly.
+For questions regarding the research methodology or technical implementation, please open an issue or contact the maintainers directly.
 
 ## Contributors
 
