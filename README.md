@@ -48,6 +48,13 @@ This codebase supports the following research publications:
 - [Enhancing the Prediction of Dam Deformations: A Novel Data-Driven Approach](https://www.mdpi.com/2072-4292/17/6/1026)
 - [Identifying Deformation Drivers in Dam Segments Using Combined X-and C-Band PS Time Series](https://www.mdpi.com/2072-4292/17/15/2629)
 
+For further research on dam monitoring using PSI, please also see the following projected-related publications:
+
+- [Assessing the Feasibility of Persistent Scatterer Data for Operational Dam Monitoring in Germany: A Case Study](https://www.mdpi.com/2072-4292/17/7/1202)
+- [Towards Operational Dam Monitoring with PS-InSAR and Electronic Corner Reflectors](https://www.mdpi.com/2072-4292/17/7/1318)
+- [First Assessment of Electronic Corner Reflectors for Dam Monitoring in Germany](https://lps25.esa.int/lps25-presentations/Poster/First%20Assessment%20of%20Electronic%20Corner%20Reflectors%20for%20Dam%20Monitoring%20in%20Germany.pdf)
+- [Dam Monitoring With Ground Motion Services–A Case Study of a Gravity Dam with the German Ground Motion Service](https://ieeexplore.ieee.org/abstract/document/10641662)
+
 ## Install
 
 ### Prerequisites
