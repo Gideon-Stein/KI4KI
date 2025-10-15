@@ -1,11 +1,11 @@
 
 # KI4KI - Künstliche Intelligenz für klimaresilientes Infrastrukturmonitoring  
-
+Artificial intelligence for climate-resilient infrastructure monitoring
 
 
       
 
-> Monitoring dam infrastructure via Remote sensing technology
+> Monitoring dam infrastructure using satellite-based Synthetic Aperture Radar (SAR) Data
 
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 
