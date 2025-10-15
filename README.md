@@ -233,7 +233,7 @@ This project exists thanks to the collaboration and generous data provision by t
 
 ### Research Collaborators
 - Computer vision Group Jena  [CVG JENA](https://inf-cv.uni-jena.de/)
-- Institute for Remote Sensing, Friedrich Schiller University Jena
+- Department of Earth Observation, Friedrich Schiller University Jena (https://www.chemgeo.uni-jena.de/29150/fernerkundung)
 - German Federal Institute for Geosciences and Natural Resources (BGR)
 - Ruhr Association for Water Management
 
