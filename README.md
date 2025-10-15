@@ -1,6 +1,6 @@
 
 # KI4KI - Künstliche Intelligenz für klimaresilientes Infrastrukturmonitoring  
-## KI4KI - Artificial intelligence for climate-resilient infrastructure monitoring
+### Artificial intelligence for climate-resilient infrastructure monitoring
 
 
       
