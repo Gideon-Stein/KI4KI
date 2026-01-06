@@ -49,9 +49,9 @@ For more information about the project, please also refer to:
 
 This codebase supports the following research publications:
 
-- [Data-Driven Prediction of Large Infrastructure Movements Through Persistent Scatterer Time Series Modeling](https://ieeexplore.ieee.org/document/10642253)
 - [Enhancing the Prediction of Dam Deformations: A Novel Data-Driven Approach](https://www.mdpi.com/2072-4292/17/6/1026)
 - [Identifying Deformation Drivers in Dam Segments Using Combined X-and C-Band PS Time Series](https://www.mdpi.com/2072-4292/17/15/2629)
+- [Data-Driven Prediction of Large Infrastructure Movements Through Persistent Scatterer Time Series Modeling](https://ieeexplore.ieee.org/document/10642253)
 
 Further research on dam monitoring using PSI can be found in the following project-related publications:
 
