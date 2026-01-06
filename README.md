@@ -15,7 +15,7 @@ This repository contains research contributions and tools for forecasting dam de
 
 
 <img src="imgs/KI4KI.jpg" width="600" align="left" alt="Image of KI4KI"> 
-<img src="imgs/teaser.png" width="800" align="left" alt="Image of Forecasts">
+<img src="imgs/teaser.png" width="800" alt="Image of Forecasts">
 
 ## Table of Contents
 
