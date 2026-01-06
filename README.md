@@ -57,9 +57,11 @@ Further research on dam monitoring using PSI can be found in the following proje
 
 - [Assessing the Feasibility of Persistent Scatterer Data for Operational Dam Monitoring in Germany: A Case Study](https://www.mdpi.com/2072-4292/17/7/1202)
 - [Towards Operational Dam Monitoring with PS-InSAR and Electronic Corner Reflectors](https://www.mdpi.com/2072-4292/17/7/1318)
+- [Evaluating the German Ground Motion Service for Operational Dam Monitoring: A Comparison of InSAR Data with In Situ Measurements](https://www.mdpi.com/2072-4292/17/21/3649)
+- [Novel Amplitude-based Approach for Reducing Sidelobes in Persistent Scatterer Interferometry Processing using Spatially Variant Apodization](https://www.mdpi.com/1424-8220/26/1/204)
 - [Enhancing Dam Monitoring: Utilizing the CR-Index for Electronic Corner Reflector (ECR) Site Selection and PSI Analysis](https://ieeexplore.ieee.org/document/10640447)
 - [First Assessment of Electronic Corner Reflectors for Dam Monitoring in Germany](https://lps25.esa.int/lps25-presentations/Poster/First%20Assessment%20of%20Electronic%20Corner%20Reflectors%20for%20Dam%20Monitoring%20in%20Germany.pdf)
-- [Dam Monitoring With Ground Motion Services–A Case Study of a Gravity Dam with the German Ground Motion Service](https://ieeexplore.ieee.org/abstract/document/10641662)
+- [Dam Monitoring With Ground Motion Services–A Case Study of a Gravity Dam with the German Ground Motion Service](https://ieeexplore.ieee.org/abstract/document/10641662) 
 
 ## Install
 
