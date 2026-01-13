@@ -1,20 +1,15 @@
 
-# KI4KI - Künstliche Intelligenz für klimaresilientes Infrastrukturmonitoring  
-### Artificial Intelligence for Climate-resilient Infrastructure Monitoring
+# Dam2Predict 
 
+   
 
-      
-
-> Monitoring dam infrastructure using satellite-based Synthetic Aperture Radar (SAR) Data
+> Predicting dam deformations using satellite-based Synthetic Aperture Radar (SAR) Data
 
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 
 This repository contains research contributions and tools for forecasting dam deformations based on environmental drivers using PSI (Persistent Scatterer Interferometry) and pendulum time series data. Note, this is work in process.
 
 
-
-
-<img src="imgs/KI4KI.jpg" width="600" align="left" alt="Image of KI4KI"> 
 <img src="imgs/teaser.png" width="800" alt="Image of Forecasts">
 
 ## Table of Contents
