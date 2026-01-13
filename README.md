@@ -29,7 +29,7 @@ This repository provides tools for forecasting dam deformations based on environ
 The KI4KI project focuses on machine learning solutions for climate-resilient infrastructure monitoring, specifically targeting dam deformation prediction. Using satellite-based methods such as the Persistent Scatterer Interferometry (PSI), deformation data is combined with environmental variables to identify the drivers of dam deformation. This repository provides tools for a potential future early warning system for infrastructure management.
 
 For more information about the project, please also refer to:
-- [KI4KI @FSU Jena](https://github.com/jziemer1996/KI4KI)
+- [KI4KI @GitHub](https://github.com/jziemer1996/KI4KI)
 - [KI4KI @FSU Jena](https://www.chemgeo.uni-jena.de/30371/infrastrukturueberwachung-mit-radarinterferometrie)
 - [KI4KI @Ruhrverband](https://ruhrverband.de/en/sustainability/research-projects/current-projects/ki4ki)
 
