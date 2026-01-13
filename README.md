@@ -29,6 +29,7 @@ This repository provides tools for forecasting dam deformations based on environ
 The KI4KI project focuses on machine learning solutions for climate-resilient infrastructure monitoring, specifically targeting dam deformation prediction. Using satellite-based methods such as the Persistent Scatterer Interferometry (PSI), deformation data is combined with environmental variables to identify the drivers of dam deformation. This repository provides tools for a potential future early warning system for infrastructure management.
 
 For more information about the project, please also refer to:
+- [KI4KI @FSU Jena](https://github.com/jziemer1996/KI4KI)
 - [KI4KI @FSU Jena](https://www.chemgeo.uni-jena.de/30371/infrastrukturueberwachung-mit-radarinterferometrie)
 - [KI4KI @Ruhrverband](https://ruhrverband.de/en/sustainability/research-projects/current-projects/ki4ki)
 
@@ -39,24 +40,6 @@ For more information about the project, please also refer to:
 - **Grid search optimization**: Automated hyperparameter tuning for model selection
 - **Scalable pipeline**: Supports processing multiple monitoring points simultaneously
 - **Research validation**: Validated through peer-reviewed publications
-
-### Publications
-
-This codebase supports the following research publications:
-
-- [Enhancing the Prediction of Dam Deformations: A Novel Data-Driven Approach](https://www.mdpi.com/2072-4292/17/6/1026)
-- [Identifying Deformation Drivers in Dam Segments Using Combined X-and C-Band PS Time Series](https://www.mdpi.com/2072-4292/17/15/2629)
-- [Data-Driven Prediction of Large Infrastructure Movements Through Persistent Scatterer Time Series Modeling](https://ieeexplore.ieee.org/document/10642253)
-
-Further research on dam monitoring using PSI can be found in the following project-related publications:
-
-- [Assessing the Feasibility of Persistent Scatterer Data for Operational Dam Monitoring in Germany: A Case Study](https://www.mdpi.com/2072-4292/17/7/1202)
-- [Towards Operational Dam Monitoring with PS-InSAR and Electronic Corner Reflectors](https://www.mdpi.com/2072-4292/17/7/1318)
-- [Evaluating the German Ground Motion Service for Operational Dam Monitoring: A Comparison of InSAR Data with In Situ Measurements](https://www.mdpi.com/2072-4292/17/21/3649)
-- [Novel Amplitude-based Approach for Reducing Sidelobes in Persistent Scatterer Interferometry Processing using Spatially Variant Apodization](https://www.mdpi.com/1424-8220/26/1/204)
-- [Enhancing Dam Monitoring: Utilizing the CR-Index for Electronic Corner Reflector (ECR) Site Selection and PSI Analysis](https://ieeexplore.ieee.org/document/10640447)
-- [First Assessment of Electronic Corner Reflectors for Dam Monitoring in Germany](https://lps25.esa.int/lps25-presentations/Poster/First%20Assessment%20of%20Electronic%20Corner%20Reflectors%20for%20Dam%20Monitoring%20in%20Germany.pdf)
-- [Dam Monitoring With Ground Motion Services–A Case Study of a Gravity Dam with the German Ground Motion Service](https://ieeexplore.ieee.org/abstract/document/10641662) 
 
 ## Install
 
